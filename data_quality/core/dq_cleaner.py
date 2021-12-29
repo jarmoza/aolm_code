@@ -10,7 +10,7 @@ from collections import Counter
 import os
 
 # Custom
-from aolm_string_utilities import clean_string
+from utilities.aolm_utilities import clean_string
 
 
 # Globals

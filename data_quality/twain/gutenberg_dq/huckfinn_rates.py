@@ -35,14 +35,99 @@
 # Idea
 # Create a datalad for text versions used in The Art of Literary Modeling
 
+# Imports
+
+# Standard library
+from collections import Counter
+import glob
+import json
 import os
 
-# Steps
-# 1: Ingest text by chapter
-from huckfinn_gutenberg_dq import HuckleberryFinn
-from huckfinn_gutenberg_dq import file_components as huckfinn_headers
-from huckfinn_gutenberg_dq import paths
+# Third parties libraries
+import nltk
 
-huckfinn = HuckleberryFinn(paths["input"] + paths["2021-02-21"], huckfinn_headers)
-output_folder = "{0}{1}data{1}output{1}".format(os.getcwd(), os.sep)
-huckfinn.output(output_folder)
+# Local libraries
+from data_quality.core.dq_cleaner import AoLM_TextCleaner
+from utilities import aolm_paths
+from utilities.aolm_utilities import clean_string
+from utilities.aolm_utilities import debug_separator
+
+# 0. Setup code and data paths
+aolm_paths.setup_paths()
+
+# huckfinn = HuckleberryFinn(paths["input"] + paths["2021-02-21"], huckfinn_headers)
+# output_folder = "{0}{1}data{1}output{1}".format(os.getcwd(), os.sep)
+# huckfinn.output(output_folder)
+
+
+# 1. Read in chapters of Huckleberry Finn editions
+
+# A. Folder where json versions of the Huckleberry Finn editions are output
+json_folder = aolm_paths.data_paths["aolm_twain"]["gutenberg_dq"] + "input" + os.sep
+
+# B. Read in each edition json
+edition_data = {}
+for json_filepath in glob.glob(json_folder + "*.json"):
+
+	# I. Filename without the extension is the edition key
+	filename_noext = os.path.splitext(os.path.basename(json_filepath))[0]
+
+	# II. Read json but skip non-"HuckFinn" files in the folder
+	if "HuckFinn" in filename_noext and "cleaned" not in filename_noext:
+		# print(json_filepath)
+		with open(json_filepath, "r") as json_fileobject:
+			edition_data[filename_noext] = \
+				json.load(json_fileobject)
+
+# 2. Clean each edition
+for edition in edition_data:
+
+	# A. Create a clean version of the edition's components
+	edition_data[edition]["clean_components"] = {}
+
+	# I. Clean each component in the edition
+	for component in edition_data[edition]["components"]:
+
+		# a. Treat body differently since it has subcomponents
+		if "body" == component:
+			
+			edition_data[edition]["clean_components"]["body"] = {}
+
+			for subcomponent in edition_data[edition]["components"]["body"]:
+				
+				# i. Create an entry for the clean version	
+				edition_data[edition]["clean_components"]["body"][subcomponent] = []
+			
+				# ii. Clean each line in the component
+				for line in edition_data[edition]["components"]["body"][subcomponent]:
+					edition_data[edition]["clean_components"]["body"][subcomponent].append(
+						clean_string(line))
+		else:
+			# i. Create an entry for the clean version
+			edition_data[edition]["clean_components"][component] = []
+		
+			# ii. Clean each line in the component
+			for line in edition_data[edition]["components"][component]:
+				edition_data[edition]["clean_components"][component].append(
+					clean_string(line))
+
+# 3. Calculate word frequencies for each chapter
+for edition in edition_data:
+
+	edition_data[edition]["word_counts"] = {}
+
+	for component in edition_data[edition]["clean_components"]:
+		
+		if "body" == component:
+			edition_data[edition]["word_counts"]["body"] = {}
+			for subcomponent in edition_data[edition]["clean_components"]["body"]:
+				tokens = nltk.word_tokenize("\n".join(edition_data[edition]["clean_components"]["body"][subcomponent]))
+				edition_data[edition]["word_counts"]["body"][subcomponent] = Counter(tokens)
+		else:
+			tokens = nltk.word_tokenize("\n".join(edition_data[edition]["clean_components"][component]))
+			edition_data[edition]["word_counts"][component] = Counter(tokens)
+
+# Write out the json with clean data
+for edition in edition_data:
+	with open(json_folder + edition + "_cleaned.json", "w") as cleaned_json_fileobj:
+		json.dump(edition_data[edition], cleaned_json_fileobj, indent=4)
