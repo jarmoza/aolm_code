@@ -10,7 +10,6 @@ import os   	   # Working directory and folder separator char
 import string 	   # Punctuation
 import unicodedata # Removing diacritics from characters
 
-
 # Debug
 
 debug_separator = "========================================================================"
@@ -127,6 +126,46 @@ def format_path(p_original_filepath):
 
 def is_valid_file(p_filepath, p_tag):
 	return p_filepath.endswith("." + p_tag) and os.path.isfile(p_filepath)
+
+# Tokenization
+
+def aolm_tokenize():
+	pass
+
+def nltk_tokenize(p_string):
+
+	# 0. Import here so all uses of aolm_utilities do not incur nltk import load time
+	import nltk
+
+	return
+
+
+# Stopwords
+
+def remove_stopwords(p_tokens, p_stopwords_type="voyant"):
+
+	# NOTE: It is presumed that string cleaning has been handled before this call
+
+	# 0. Import for data paths here so not all uses of aolm_utilities incur
+	# data_paths load time
+	from utilities import aolm_paths
+	aolm_paths.setup_paths()
+
+	# 1. Read in stopwords from given list
+	if p_stopwords_type == "voyant":
+		with open(aolm_paths.data_paths["aolm_general"]["voyant_stopwords"], "r") as stopwords_file:
+			stopwords = [sw.strip() for sw in stopwords_file.readlines()]
+	# Other stopword list handlin here
+	else:
+		return []
+
+	# 2. Remove stopwords from token list
+	new_token_list = [token.lower() for token in p_tokens if token.lower() not in stopwords]
+
+	return new_token_list
+
+
+	
 
 
 

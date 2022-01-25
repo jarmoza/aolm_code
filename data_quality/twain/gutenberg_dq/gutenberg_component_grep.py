@@ -34,8 +34,10 @@ import os
 import sys
 
 # Custom
-from aolm_utilities_extension import print_debug_header
-from aolm_utilities_extension import is_valid_file
+from utilities.aolm_utilities import print_debug_header
+from utilities.aolm_utilities import is_valid_file
+from utilities import aolm_paths
+aolm_paths.setup_paths()
 
 
 # Globals
@@ -43,8 +45,8 @@ from aolm_utilities_extension import is_valid_file
 # Input/output paths
 paths = {
 	
-	"input": "{0}{1}data{1}input{1}".format(os.getcwd(), os.sep),
-	"output": "{0}{1}data{1}output{1}".format(os.getcwd(), os.sep)
+	"input": "{0}gutenberg_dq{1}input{1}".format(aolm_paths.data_paths["aolm_twain_root"], os.sep),
+	"output": "{0}gutenberg_dq{1}input{1}".format(aolm_paths.data_paths["aolm_twain_root"], os.sep)
 }
 
 # Utility functions

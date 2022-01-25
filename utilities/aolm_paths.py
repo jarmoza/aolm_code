@@ -56,7 +56,10 @@ def setup_data_paths():
 		}
 
 		# B. General working data
-		data_paths["aolm_general"] = {}
+		data_paths["aolm_general"] = {
+
+			"voyant_stopwords": data_paths["aolm_general_root"] + "input" + os.sep + "voyant_stopwords.txt"
+		}
 
 		# C. HathiTrust working data
 		data_paths["aolm_hathi"] = {}
@@ -94,5 +97,6 @@ def setup_data_paths():
 		# I. Mark Twain source data
 		data_paths["twain"] = {
 
-			"autobiography": data_paths["twain_root"] + "autobiography" + os.sep
+			"autobiography": data_paths["twain_root"] + "autobiography" + os.sep,
+			"internet_archive": data_paths["twain_root"] + "internet_archive" + os.sep
 		}

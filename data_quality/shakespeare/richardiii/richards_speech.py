@@ -5,21 +5,27 @@
 
 # Imports
 
-# Built-ins
+# Standard library
 import argparse
 import os
 
-# Custom
-from dq_cleaner import AoLM_TextCleaner
+# Third party libraries
+import nltk
 
+# Custom
+from data_quality.core.dq_cleaner import AoLM_TextCleaner
+from utilities import aolm_paths
+
+# Setup data paths
+aolm_paths.setup_paths()
 
 # Globals
 
 # Filepaths
 paths = {
 	
-	"richards_speech": os.getcwd() + os.sep + "richards_speech.txt",
-	"richards_speech_1s": os.getcwd() + os.sep + "richards_speech_1s.txt",
+	"richards_speech": "{0}input{1}richards_speech.txt".format(aolm_paths.data_paths["aolm_shakespeare"]["richardiii"], os.sep),
+	"richards_speech_1s": "{0}input{1}richards_speech_1s.txt".format(aolm_paths.data_paths["aolm_shakespeare"]["richardiii"], os.sep),
 }
 
 
@@ -43,6 +49,13 @@ def main(p_args):
 	print("Richard's speech cleaned by {0} string cleaning:".format(p_args.tokenization_type))
 	print("\n".join(text_cleaner.clean_text_no_sw))
 	print("Word counts:\n{0}".format(frequencies))
+
+	# C. NLTK tokenization
+	with open(text_filepath, "r") as text_file:
+		richard1s_lines = text_file.readlines()
+	tokens = nltk.word_tokenize("\n".join(richard1s_lines))
+	print("NLTK tokens: {0}".format(tokens))
+	
 
 if "__main__" == __name__:
 

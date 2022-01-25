@@ -10,8 +10,11 @@ from collections import Counter
 import os
 
 # Custom
+from utilities import aolm_paths
 from utilities.aolm_utilities import clean_string
 
+# Setup data paths
+aolm_paths.setup_paths()
 
 # Globals
 
@@ -157,6 +160,6 @@ class AoLM_TextCleaner(object):
 
 	s_stopword_files = {
 
-		"voyant": os.getcwd() + os.sep + "voyant_stopwords.txt"
+		"voyant": aolm_paths.data_paths["aolm_general"]["voyant_stopwords"]
 	}
 
