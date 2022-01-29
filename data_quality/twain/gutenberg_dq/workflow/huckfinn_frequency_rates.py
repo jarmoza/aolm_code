@@ -419,24 +419,26 @@ class WordFrequencyTracker:
 		
 		# 1. Write out the json with processed data
 		for text in self.m_texts:
-			with open(p_output_path + "_{0}.json".format(p_new_filetag), "w") as cleaned_json_fileobj:
+			with open(p_output_path + "{0}_{1}.json".format(text, p_new_filetag), "w") as cleaned_json_fileobj:
 				json.dump(self.m_texts[text], cleaned_json_fileobj, indent=4)
 
 
 def main():
 
 	# Setup for word frequency tracking
-	input_folder = aolm_paths.data_paths["aolm_twain"]["gutenberg_dq"] + "input" + os.sep
-	output_folder = aolm_paths.data_paths["aolm_twain"]["gutenberg_dq"] + "output" + os.sep
+	# input_folder = aolm_paths.data_paths["aolm_twain"]["gutenberg_dq"] + "input" + os.sep
+	# output_folder = aolm_paths.data_paths["aolm_twain"]["gutenberg_dq"] + "output" + os.sep
+	input_folder = "{0}txt{1}demarcated{1}".format(aolm_paths.data_paths["twain"]["internet_archive"], os.sep)
+	output_folder = "{0}txt{1}demarcated{1}output{1}".format(aolm_paths.data_paths["twain"]["internet_archive"], os.sep)
 	stopwords_filepath = aolm_paths.data_paths["aolm_general"]["voyant_stopwords"]
 	last_text_component = "HUCKLEBERRYFINN_BODY_CHAPTER THE LAST"
-	source_text_filename = "2021-02-21-HuckFinn"
+	source_text_filename = "2021-02-21-HuckFinn_cleaned"
 
 	# 1. Track the word frequencies for all the "Adventures of Huckleberry Finn" editions (in json form)
 	tracker = WordFrequencyTracker(input_folder, source_text_filename, stopwords_filepath)
 
 	# 2. Examine word count differences between the editions
-	tracker.word_count_differences(last_text_component)
+	# tracker.word_count_differences(last_text_component)
 
 	# 3. Write the new json from the tracker to the outptu folder
 	tracker.write(output_folder)

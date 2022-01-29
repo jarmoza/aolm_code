@@ -45,8 +45,11 @@ aolm_paths.setup_paths()
 # Input/output paths
 paths = {
 	
-	"input": "{0}gutenberg_dq{1}input{1}".format(aolm_paths.data_paths["aolm_twain_root"], os.sep),
-	"output": "{0}gutenberg_dq{1}input{1}".format(aolm_paths.data_paths["aolm_twain_root"], os.sep)
+	# "input": "{0}gutenberg_dq{1}input{1}".format(aolm_paths.data_paths["aolm_twain_root"], os.sep),
+	# "output": "{0}gutenberg_dq{1}input{1}".format(aolm_paths.data_paths["aolm_twain_root"], os.sep)
+	"input": "{0}txt{1}demarcated{1}".format(aolm_paths.data_paths["twain"]["internet_archive"], os.sep),
+	"output": "{0}txt{1}demarcated{1}".format(aolm_paths.data_paths["twain"]["internet_archive"], os.sep)
+
 }
 
 # Utility functions
@@ -224,6 +227,7 @@ def main(p_txt_filename):
 
 	# 0. Text file path and metadata json file path inferred form text filename
 	text_filepath = paths["input"] + p_txt_filename
+	print(text_filepath)
 	metadata_filepath = paths["input"] + os.path.splitext(p_txt_filename)[0] + ".json"
 
 	# 0. Check for valid input text file and corresponding metadata json file
