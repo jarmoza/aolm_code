@@ -98,5 +98,6 @@ def setup_data_paths():
 		data_paths["twain"] = {
 
 			"autobiography": data_paths["twain_root"] + "autobiography" + os.sep,
-			"internet_archive": data_paths["twain_root"] + "internet_archive" + os.sep
+			"huckleberry_finn": data_paths["twain_root"] + "huckleberry_finn" + os.sep,
+			"internet_archive": data_paths["twain_root"] + "huckleberry_finn" + os.sep + "internet_archive" + os.sep
 		}

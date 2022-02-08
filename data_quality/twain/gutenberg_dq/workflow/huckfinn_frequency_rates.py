@@ -219,6 +219,15 @@ class WordFrequencyTracker:
 				# tokens = EDAPoem.tokenize_line("\n".join(self.m_texts[text]["clean_components"][component]))
 				self.m_texts[text]["word_counts"][component] = Counter(tokens)
 
+	# Properties
+
+	@property
+	def text(self, p_textname):
+		return self.m_texts[p_textname]
+	@property
+	def texts(self):
+		return self.m_texts
+	
 	# Public methods
 
 	def process(self, p_cleaning_function=clean_string,
@@ -431,7 +440,7 @@ def main():
 	input_folder = "{0}txt{1}demarcated{1}".format(aolm_paths.data_paths["twain"]["internet_archive"], os.sep)
 	output_folder = "{0}txt{1}demarcated{1}output{1}".format(aolm_paths.data_paths["twain"]["internet_archive"], os.sep)
 	stopwords_filepath = aolm_paths.data_paths["aolm_general"]["voyant_stopwords"]
-	last_text_component = "HUCKLEBERRYFINN_BODY_CHAPTER THE LAST"
+	# last_text_component = "HUCKLEBERRYFINN_BODY_CHAPTER THE LAST"
 	source_text_filename = "2021-02-21-HuckFinn_cleaned"
 
 	# 1. Track the word frequencies for all the "Adventures of Huckleberry Finn" editions (in json form)

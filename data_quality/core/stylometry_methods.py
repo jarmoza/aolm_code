@@ -21,14 +21,14 @@ import nltk
 federalist_papers = {
 	
 	"Madison":  [10, 14, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48],
-    "Hamilton": [1, 6, 7, 8, 9, 11, 12, 13, 15, 16, 17, 21, 22, 23, 24,
-                 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 59, 60,
-                 61, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77,
-                 78, 79, 80, 81, 82, 83, 84, 85],
-    "Jay": 		[2, 3, 4, 5],
-    "Shared": 	[18, 19, 20],
-    "Disputed": [49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 62, 63],
-    "TestCase": [64]
+	"Hamilton": [1, 6, 7, 8, 9, 11, 12, 13, 15, 16, 17, 21, 22, 23, 24,
+				 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 59, 60,
+				 61, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77,
+				 78, 79, 80, 81, 82, 83, 84, 85],
+	"Jay": 		[2, 3, 4, 5],
+	"Shared": 	[18, 19, 20],
+	"Disputed": [49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 62, 63],
+	"TestCase": [64]
 }
 
 paths = {
@@ -60,55 +60,55 @@ class TextCollection(object):
 		# 2. Calculate chisquared for each of the text collection divisions
 		for div_id in p_division_ids:
 
-		    # A. First, build a joint corpus and identify the n most frequent words in it
-		    joint_corpus = (division_tokens[div_id] + 
-		    	division_tokens[p_comparison_id])
-		    joint_freq_dist = nltk.FreqDist(joint_corpus)
-		    most_common = list(joint_freq_dist.most_common(n_most_frequent_words))
+			# A. First, build a joint corpus and identify the n most frequent words in it
+			joint_corpus = (division_tokens[div_id] + 
+				division_tokens[p_comparison_id])
+			joint_freq_dist = nltk.FreqDist(joint_corpus)
+			most_common = list(joint_freq_dist.most_common(n_most_frequent_words))
 
-		    # B. What proportion of the joint corpus is made up
-		    # of the candidate division's tokens?
-		    division_share = len(division_tokens[div_id]) / len(joint_corpus)
+			# B. What proportion of the joint corpus is made up
+			# of the candidate division's tokens?
+			division_share = len(division_tokens[div_id]) / len(joint_corpus)
 
-		    # C. Now, let's look at the n most common words in the candidate
-		    # division's corpus and compare the number of times they can be observed
-		    # to what would be expected if the division's texts
-		    # and the comparison texts were both random samples from the same distribution.
-		    chisquared = 0
-		    for word, joint_count in most_common:
+			# C. Now, let's look at the n most common words in the candidate
+			# division's corpus and compare the number of times they can be observed
+			# to what would be expected if the division's texts
+			# and the comparison texts were both random samples from the same distribution.
+			chisquared = 0
+			for word, joint_count in most_common:
 
-		        # I. How often do we really see this common word?
-		        division_count = division_tokens[div_id].count(word)
-		        comparison_count = division_tokens[p_comparison_id].count(word)
+				# I. How often do we really see this common word?
+				division_count = division_tokens[div_id].count(word)
+				comparison_count = division_tokens[p_comparison_id].count(word)
 
-		        # II. How often should we see it?
-		        expected_division_count = joint_count * division_share
-		        expected_comparison_count = joint_count * (1 - division_share)
+				# II. How often should we see it?
+				expected_division_count = joint_count * division_share
+				expected_comparison_count = joint_count * (1 - division_share)
 
-		        # III. Add the word's contribution to the chi-squared statistic
-		        chisquared += ((division_count - expected_division_count) *
-		                       (division_count - expected_division_count) /
-		                       expected_division_count)
+				# III. Add the word's contribution to the chi-squared statistic
+				chisquared += ((division_count - expected_division_count) *
+							   (division_count - expected_division_count) /
+							   expected_division_count)
 
-		        chisquared += ((comparison_count - expected_comparison_count) *
-		                       (comparison_count - expected_comparison_count) / 
-		                       expected_disputed_count)
+				chisquared += ((comparison_count - expected_comparison_count) *
+							   (comparison_count - expected_comparison_count) / 
+							   expected_disputed_count)
 
-		    print("The Chi-squared statistic for candidate", div_id, "is", chisquared)
+			print("The Chi-squared statistic for candidate", div_id, "is", chisquared)
 
 	# Static methods
 
 	# A function that reads a list text files into a single string
 	@staticmethod
 	def read_files_into_one_string(p_filepaths):
-	    
-	    strings = []
+		
+		strings = []
 
-	    for filepath in p_filepaths:
-	        with open(filepath, "r") as f:
-	            strings.append(f.read())
+		for filepath in p_filepaths:
+			with open(filepath, "r") as f:
+				strings.append(f.read())
 
-	    return "\n".join(strings)
+		return "\n".join(strings)
 
 class Text(object):
 
@@ -166,7 +166,7 @@ class BurrowsDelta(object):
 			tokens = nltk.word_tokenize(self.m_collection_by_div_id[div_id])
 			
 			self.m_tokens_by_division[div_id] = ([token.lower() for token in tokens
-	    		if any(c.isalpha() for c in token)])
+				if any(c.isalpha() for c in token)])
 
 		# 4. Combine tokens of every text except our comparison case into a single collection
 		for div_id in self.m_division_ids:
@@ -174,7 +174,7 @@ class BurrowsDelta(object):
 
 		# 5. Get a frequency distribution of all tokens in the corpus
 		self.m_whole_corpus_freq_dist = list(
-			nltk.FreqDist(self.m_whole_corpus_tokens).most_common(self.m_most_common_tokens))	    				
+			nltk.FreqDist(self.m_whole_corpus_tokens).most_common(self.m_most_common_tokens))						
 
 	# Private methods
 
@@ -230,16 +230,16 @@ class BurrowsDelta(object):
 
 		for div_id in self.m_division_ids:
 
-		    # A. Create a dictionary for each candidate's features
-		    self.m_feature_freqs[div_id] = {}
+			# A. Create a dictionary for each candidate's features
+			self.m_feature_freqs[div_id] = {}
 
-		    # B. Calculate the number of tokens in the division's subcorpus
-		    overall = len(self.m_tokens_by_division[div_id])
+			# B. Calculate the number of tokens in the division's subcorpus
+			overall = len(self.m_tokens_by_division[div_id])
 
-		    # C. Calculate each feature's presence in the subcorpus
-		    for feature in self.m_features:
-		        presence = self.m_tokens_by_division[div_id].count(feature)
-		        self.m_feature_freqs[div_id][feature] = presence / overall
+			# C. Calculate each feature's presence in the subcorpus
+			for feature in self.m_features:
+				presence = self.m_tokens_by_division[div_id].count(feature)
+				self.m_feature_freqs[div_id][feature] = presence / overall
 
 	def feature_stats(self):
 
@@ -248,46 +248,46 @@ class BurrowsDelta(object):
 
 		# 1. Calculate mean and standard deviation for each feature
 		for feature in self.m_features:
-		    
-		    # A. Create a sub-dictionary that will contain the feature's mean
-		    # and standard deviation
-		    self.m_corpus_features[feature] = {}
+			
+			# A. Create a sub-dictionary that will contain the feature's mean
+			# and standard deviation
+			self.m_corpus_features[feature] = {}
 
-		    # B. Calculate the mean of the frequencies expressed in the subcorpora
-		    feature_average = 0
-		    for div_id in self.m_division_ids:
-		        feature_average += self.m_feature_freqs[div_id][feature]
-		    feature_average /= len(self.m_division_ids)
-		    self.m_corpus_features[feature][BurrowsDelta.feature_stats_mean] = feature_average
+			# B. Calculate the mean of the frequencies expressed in the subcorpora
+			feature_average = 0
+			for div_id in self.m_division_ids:
+				feature_average += self.m_feature_freqs[div_id][feature]
+			feature_average /= len(self.m_division_ids)
+			self.m_corpus_features[feature][BurrowsDelta.feature_stats_mean] = feature_average
 
-		    # C. Calculate the standard deviation using the basic formula for a sample
-		    feature_stdev = 0
-		    for div_id in self.m_division_ids:
-		        diff = self.m_feature_freqs[div_id][feature] - \
-		        	self.m_corpus_features[feature][BurrowsDelta.feature_stats_mean]
-		        feature_stdev += diff * diff
-		    feature_stdev /= len(self.m_division_ids) - 1
-		    feature_stdev = math.sqrt(feature_stdev)
-		    self.m_corpus_features[feature][BurrowsDelta.feature_stats_stddev] = feature_stdev
+			# C. Calculate the standard deviation using the basic formula for a sample
+			feature_stdev = 0
+			for div_id in self.m_division_ids:
+				diff = self.m_feature_freqs[div_id][feature] - \
+					self.m_corpus_features[feature][BurrowsDelta.feature_stats_mean]
+				feature_stdev += diff * diff
+			feature_stdev /= len(self.m_division_ids) - 1
+			feature_stdev = math.sqrt(feature_stdev)
+			self.m_corpus_features[feature][BurrowsDelta.feature_stats_stddev] = feature_stdev
 
 	def feature_z_scores(self):
 		
 		# 1. Calculate z-scores for features in each corpus division
 		for div_id in self.m_division_ids:
-		    
-		    self.m_feature_zscores[div_id] = {}
-		    for feature in self.m_features:
+			
+			self.m_feature_zscores[div_id] = {}
+			for feature in self.m_features:
 
-		        # Z-score definition = (value - mean) / stddev
-		        
-		        # Intermediate variables to make the code easier to read
-		        feature_val = self.m_feature_freqs[div_id][feature]
-		        feature_mean = self.m_corpus_features[feature][BurrowsDelta.feature_stats_mean]
-		        feature_stdev = self.m_corpus_features[feature][BurrowsDelta.feature_stats_stddev]
+				# Z-score definition = (value - mean) / stddev
+				
+				# Intermediate variables to make the code easier to read
+				feature_val = self.m_feature_freqs[div_id][feature]
+				feature_mean = self.m_corpus_features[feature][BurrowsDelta.feature_stats_mean]
+				feature_stdev = self.m_corpus_features[feature][BurrowsDelta.feature_stats_stddev]
 
-		        # A. Calculate Z-score for this feature in the division
-		        self.m_feature_zscores[div_id][feature] = \
-		        	((feature_val - feature_mean) / feature_stdev)
+				# A. Calculate Z-score for this feature in the division
+				self.m_feature_zscores[div_id][feature] = \
+					((feature_val - feature_mean) / feature_stdev)
 
 	def test_case(self):
 
@@ -296,21 +296,21 @@ class BurrowsDelta(object):
 
 		# 2. Filter out punctuation and lowercase the tokens
 		self.m_testcase_tokens = [token.lower() for token in self.m_testcase_tokens
-		                   if any(c.isalpha() for c in token)]
+						   if any(c.isalpha() for c in token)]
 
 		# 3. Calculate the test case's features
 		overall = len(self.m_testcase_tokens)
 		for feature in self.m_features:
-		    presence = self.m_testcase_tokens.count(feature)
-		    self.m_testcase_freqs[feature] = presence / overall
+			presence = self.m_testcase_tokens.count(feature)
+			self.m_testcase_freqs[feature] = presence / overall
 
 		# 4. Calculate the test case's feature z-scores
 		for feature in self.m_features:
-		    feature_val = self.m_testcase_freqs[feature]
-		    feature_mean = self.m_corpus_features[feature][BurrowsDelta.feature_stats_mean]
-		    feature_stdev = self.m_corpus_features[feature][BurrowsDelta.feature_stats_stddev]
-		    self.m_testcase_zscores[feature] = (feature_val - feature_mean) / feature_stdev
-		    print("Test case z-score for feature", feature, "is", self.m_testcase_zscores[feature])
+			feature_val = self.m_testcase_freqs[feature]
+			feature_mean = self.m_corpus_features[feature][BurrowsDelta.feature_stats_mean]
+			feature_stdev = self.m_corpus_features[feature][BurrowsDelta.feature_stats_stddev]
+			self.m_testcase_zscores[feature] = (feature_val - feature_mean) / feature_stdev
+			print("Test case z-score for feature", feature, "is", self.m_testcase_zscores[feature])
 
 	def delta(self):
 
@@ -318,12 +318,12 @@ class BurrowsDelta(object):
 		for div_id in self.m_division_ids:
 
 			# A. Delta calculation
-		    delta = 0
-		    for feature in self.m_features:
-		        delta += math.fabs((self.m_testcase_zscores[feature] -
-		                            self.m_feature_zscores[div_id][feature]))
-		    delta /= len(self.m_features)
-		    print("Delta score for candidate", div_id, "is", delta)		
+			delta = 0
+			for feature in self.m_features:
+				delta += math.fabs((self.m_testcase_zscores[feature] -
+									self.m_feature_zscores[div_id][feature]))
+			delta /= len(self.m_features)
+			print("Delta score for candidate", div_id, "is", delta)		
 
 	# Static fields
 

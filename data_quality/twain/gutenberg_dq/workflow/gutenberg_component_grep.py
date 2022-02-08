@@ -33,7 +33,7 @@ import json
 import os
 import sys
 
-# Custom
+# Local
 from utilities.aolm_utilities import print_debug_header
 from utilities.aolm_utilities import is_valid_file
 from utilities import aolm_paths
