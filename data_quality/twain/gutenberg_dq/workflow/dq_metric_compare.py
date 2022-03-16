@@ -143,6 +143,49 @@ class HuckFinnVolumeComparer(TextMetricComparer):
 
         return list(common_wordset)
 
+    def different_words(self):
+
+        last_chapter_name = "HUCKLEBERRYFINN_BODY_CHAPTER THE LAST"
+
+        # 1. Get words of source text
+        source_words = self.m_texts[self.source_textname]["cumulative_word_counts"][last_chapter_name].keys()
+
+        # 2. Create lists for each compared text
+        other_edition_words = {}
+        for text_id in self.m_texts:
+            if text_id != self.source_textname:
+                other_edition_words[text_id] = self.m_texts[text_id]["cumulative_word_counts"][last_chapter_name].keys()
+
+        # 3. Find words that are in each compared text but not in the source text
+        # and add those words to their respective lists
+        other_edition_new_words = {}
+        for text_id in other_edition_words:
+            other_edition_new_words[text_id] = list(set(other_edition_words[text_id]) - set(source_words))
+
+        # 4. Find words source text has in common with each compared text
+        other_edition_common_words = {}
+        for text_id in other_edition_words:
+            other_edition_common_words[text_id] = list(set(other_edition_words[text_id]).intersection(set(source_words)))
+
+        # 5. Find the difference in counts of those common words between the source
+        # text and compared text (compared's counts above or below source text, +/-)
+        other_edition_common_word_counts = {}
+        for text_id in other_edition_words:
+            other_edition_common_word_counts[text_id] = {}
+            for word in other_edition_common_words[text_id]:
+                other_edition_common_word_counts[text_id][word] = \
+                    self.m_texts[text_id]["cumulative_word_counts"][last_chapter_name][word] - \
+                        self.m_texts[self.source_textname]["cumulative_word_counts"][last_chapter_name][word]
+
+        # A. Clean words that have no difference between source and other editions
+        for text_id in other_edition_common_word_counts:
+            other_edition_common_word_counts[text_id] = { word: other_edition_common_word_counts[text_id][word] \
+                for word in other_edition_common_word_counts[text_id] \
+                    if other_edition_common_word_counts[text_id][word] > 0 }
+            
+
+        return [other_edition_new_words, other_edition_common_word_counts]
+
     def unique_words(self):
         return None
 
