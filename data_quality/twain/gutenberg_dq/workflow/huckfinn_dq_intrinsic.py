@@ -1,7 +1,26 @@
+"""
 # Author: Jonathan Armoza
 # Created: February 28, 2022
 # Purpose: Maintains intrinsic data quality metrics and dimensions for
 # 'The Adventures of Huckleberry Finn'
+
+===============================================================================
+Intrinsic data quality 
+
+May be a measure of the success of matching an iteration (digitized copy,
+alternate edition, etc.) of a text to a physical or digital source that is
+considered to be the primary/reputable edition
+
+Intrinsic dimensions include accuracy, objectivity, believability, and reputation
+
+Accuracy - how close to the ground truth of a particular edition
+
+Objectivity - how close to the ground truth of the best edition
+
+Believability - how many steps/orders removed from the original
+
+Reputation - Research + ask Peter Gibian
+"""
 
 # Imports
 
